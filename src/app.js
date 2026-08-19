@@ -1,11 +1,9 @@
-const express = require('express');
+const express = require("express");
+const swaggerUi = require("swagger-ui-express");
+
+const swaggerSpec = require("./config/swagger");
+
 const app = express();
-
-// stream morgan's request logs into winston instead of console
-app.use(morgan('combined', {
-  stream: { write: (message) => logger.info(message.trim()) }
-}));
-
 
 app.use(express.json());
 
