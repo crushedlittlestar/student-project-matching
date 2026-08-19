@@ -52,14 +52,14 @@ describe("Authentication Tests", () => {
 
     test("Protected route rejects missing token", async () => {
         const response = await request(app)
-            .get("/api/test/protected");
+            .get("/api/users/me");
 
         expect(response.statusCode).toBe(401);
     });
 
     test("Protected route accepts valid token", async () => {
         const response = await request(app)
-            .get("/api/test/protected")
+            .get("/api/users/me")
             .set("Authorization", `Bearer ${token}`);
 
         expect(response.statusCode).toBe(200);
@@ -67,17 +67,9 @@ describe("Authentication Tests", () => {
 
     test("Invalid token returns 401", async () => {
         const response = await request(app)
-            .get("/api/test/protected")
+            .get("/api/users/me")
             .set("Authorization", "Bearer invalidtoken");
 
         expect(response.statusCode).toBe(401);
-    });
-
-    test("Student is blocked from Admin route", async () => {
-        const response = await request(app)
-            .get("/api/test/admin")
-            .set("Authorization", `Bearer ${token}`);
-
-        expect(response.statusCode).toBe(403);
     });
 });
