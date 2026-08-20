@@ -1,9 +1,10 @@
 const Report = require('../models/Report.model');
 const Project = require('../models/project.model');
+const reportService = require('../services/report.service');
 const { AppError, sendSuccess, sendError } = require('../utils');
 
 // CREATE a report — any logged-in user can report a Project or a User.
-exports.createReport = async (req, res, next) => {
+const createReport = async (req, res, next) => {
   try {
     const { targetType, targetId, reason } = req.body;
 
@@ -38,7 +39,7 @@ exports.createReport = async (req, res, next) => {
 };
 
 // GET reports — admin only (enforced by route middleware).
-exports.getReports = async (req, res, next) => {
+const getReports = async (req, res, next) => {
   try {
     const { status = 'Pending' } = req.query;
 
@@ -53,7 +54,7 @@ exports.getReports = async (req, res, next) => {
 };
 
 // RESOLVE report: admin dismiss it or take action.
-exports.resolveReport = async (req, res, next) => {
+const resolveReport = async (req, res, next) => {
   try {
     const { id } = req.params;
     const { action } = req.body;
@@ -81,4 +82,21 @@ exports.resolveReport = async (req, res, next) => {
   } catch (err) {
     next(err);
   }
+};
+
+// GET /api/reports/analytics
+const getAnalyticsReport = async (req, res, next) => {
+  try {
+    const analytics = await reportService.getPlatformAnalytics();
+    return sendSuccess(res, analytics, 'Analytics report generated successfully', 200);
+  } catch (err) {
+    next(err);
+  }
+};
+
+module.exports = {
+  createReport,
+  getReports,
+  resolveReport,
+  getAnalyticsReport
 };

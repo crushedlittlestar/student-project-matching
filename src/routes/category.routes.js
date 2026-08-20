@@ -11,13 +11,6 @@ const {
 
 const router = express.Router();
 
-/**
- * @swagger
- * tags:
- *   name: Categories
- *   description: Project category management
- */
-
 // @route  GET /api/categories
 // @access Public
 router.get('/', listCategories);

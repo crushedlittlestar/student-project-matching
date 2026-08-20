@@ -1,3 +1,6 @@
+const reportService = require('../services/report.service');
+const { sendSuccess } = require('../utils');
+
 const validateReport = (req, res, next) => {
   const errors = [];
   const { targetType, targetId, reason } = req.body;
@@ -24,4 +27,17 @@ const validateReport = (req, res, next) => {
   next();
 };
 
-module.exports = validateReport;
+const getAnalyticsReport = async (req, res, next) => {
+  try {
+    const analytics = await reportService.getPlatformAnalytics();
+    return sendSuccess(res, analytics, 'Analytics report generated successfully', 200);
+  } catch (err) {
+    next(err);
+  }
+};
+
+// Export both functions as an object:
+module.exports = {
+  validateReport,
+  getAnalyticsReport
+};

@@ -2,7 +2,7 @@ const router = require('express').Router();
 
 const authenticate = require('../middlewares/auth.middleware');
 const authorize = require('../middlewares/role.middleware');
-const validateReport = require('../middlewares/report.middleware');
+const {validateReport, getAnalyticsReport }= require('../middlewares/report.middleware');
 
 const {
   createReport,
@@ -55,6 +55,7 @@ const {
  *       401:
  *         description: Unauthorized
  */
+
 router.post(
   '/',
   authenticate,
@@ -133,5 +134,71 @@ router.patch(
   authorize('Admin'),
   resolveReport
 );
+
+// Admin-only report route
+/**
+ * @swagger
+ * /api/reports/analytics:
+ *   get:
+ *     summary: Get overall platform analytics and application statistics
+ *     description: Retrieves high-level platform analytics, including total users, total projects, application breakdowns by status, and acceptance rate. Requires Admin authorization.
+ *     tags: [Reports]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Analytics report generated successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: Analytics report generated successfully
+ *                 data:
+ *                   type: object
+ *                   properties:
+ *                     overview:
+ *                       type: object
+ *                       properties:
+ *                         totalUsers:
+ *                           type: integer
+ *                           example: 150
+ *                         totalProjects:
+ *                           type: integer
+ *                           example: 45
+ *                         totalApplications:
+ *                           type: integer
+ *                           example: 120
+ *                         acceptanceRate:
+ *                           type: string
+ *                           example: "35.50%"
+ *                     applicationsBreakdown:
+ *                       type: object
+ *                       properties:
+ *                         total:
+ *                           type: integer
+ *                           example: 120
+ *                         PENDING:
+ *                           type: integer
+ *                           example: 50
+ *                         ACCEPTED:
+ *                           type: integer
+ *                           example: 42
+ *                         REJECTED:
+ *                           type: integer
+ *                           example: 28
+ *       401:
+ *         description: Unauthorized - Token missing or invalid
+ *       403:
+ *         description: Forbidden - Requires Admin role
+ *       500:
+ *         description: Internal server error
+ */
+router.get('/analytics', authenticate, authorize('Admin'), getAnalyticsReport);
 
 module.exports = router;
