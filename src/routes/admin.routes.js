@@ -7,6 +7,7 @@ const {
   getAllProjects,
   deleteProject,
   getAllApplications,
+  deleteApplication,
   deleteSkill,
   getAllReports,
   resolveReport
@@ -164,19 +165,55 @@ router.get('/reports', getAllReports);
  */
 router.patch('/reports/:id/resolve', resolveReport);
 
-// Module stubs
+// Application management routes
+
 /**
  * @swagger
  * /api/admin/applications:
  *   get:
- *     summary: Get all applications (Stub)
+ *     summary: Get all project applications
  *     tags: [Admin]
  *     security:
  *       - bearerAuth: []
+ *     parameters:
+ *       - in: query
+ *         name: status
+ *         schema:
+ *           type: string
+ *           enum: [PENDING, ACCEPTED, REJECTED]
+ *         description: Filter applications by status
  *     responses:
  *       200:
- *         description: Applications placeholder response
+ *         description: List of all applications retrieved successfully
+ *       401:
+ *         description: Unauthorized - missing or invalid token
+ *       403:
+ *         description: Forbidden - Requires Admin role
  */
+router.get('/applications', getAllApplications);
+
+/**
+ * @swagger
+ * /api/admin/applications/{id}:
+ *   delete:
+ *     summary: Delete or withdraw an application as Admin
+ *     tags: [Admin]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The application ID
+ *     responses:
+ *       200:
+ *         description: Application deleted successfully
+ *       404:
+ *         description: Application not found
+ */
+router.delete('/applications/:id', deleteApplication);
 router.get('/applications', getAllApplications);
 /**
  * @swagger
