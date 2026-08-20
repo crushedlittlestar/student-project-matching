@@ -110,7 +110,7 @@ async function searchStudents(req, res, next)
     {
       skillNames = skills.split(',').map((s) => s.trim());
     }
-    onst filter = {};
+    const filter = {};
     if (skillNames.length > 0)
     {
       const matchedSkills = await Skill.find({

@@ -1,5 +1,6 @@
 const User = require("../models/user.model");
 const Project = require('../models/project.model');
+const Skill = require('../models/skill.model');
 const Report = require('../models/Report.model');
 const { ApiError, logger, sendSuccess } = require('../utils');
 
@@ -107,11 +108,18 @@ exports.getAllApplications = async (req, res, next) => {
   }
 };
 
-// DELETE /api/admin/skills/:id (Placeholder)
+// DELETE /api/admin/skills/:id
 exports.deleteSkill = async (req, res, next) => {
   try {
     const { id } = req.params;
-    logger?.info?.(`Admin action: user ${req.user.id || req.user.userId} deleted skill ${id} at ${new Date().toISOString()}`);
+    const Skill = mongoose.models.Skill || mongoose.model('Skill');
+    const skill = await Skill.findByIdAndDelete(id);
+    if (!skill) {
+      return next(new ApiError(404, 'Skill not found'));
+    }
+
+    logger?.info?.(`Admin action: user ${req.user.id || req.user.userId} deleted skill ${id}`);
+
     return sendSuccess(res, null, 'Skill deleted successfully', 200);
   } catch (err) {
     next(err);

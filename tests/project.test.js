@@ -5,7 +5,7 @@ const { MongoMemoryServer } = require('mongodb-memory-server');
 
 const app = require('../src/app');
 const Category = require('../src/models/category.model');
-const Skill = require('../src/models/skill.model.stub');
+const Skill = require('../src/models/skill.model');
 const Project = require('../src/models/project.model');
 
 let mongoServer;

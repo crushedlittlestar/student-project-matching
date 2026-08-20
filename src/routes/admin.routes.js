@@ -182,7 +182,7 @@ router.get('/applications', getAllApplications);
  * @swagger
  * /api/admin/skills/{id}:
  *   delete:
- *     summary: Delete a skill (Stub)
+ *     summary: Delete a skill 
  *     tags: [Admin]
  *     security:
  *       - bearerAuth: []
@@ -194,7 +194,7 @@ router.get('/applications', getAllApplications);
  *           type: string
  *     responses:
  *       200:
- *         description: Skill deleted placeholder response
+ *         description: Skill deleted response
  */
 router.delete('/skills/:id', deleteSkill);
 
