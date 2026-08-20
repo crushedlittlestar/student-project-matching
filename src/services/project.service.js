@@ -1,7 +1,7 @@
 const Project = require('../models/project.model');
 const Category = require('../models/category.model');
-const Skill = require('../models/skill.model.stub'); // swap for Member 2's real Skill model on merge
-require('../models/user.model'); // registers "User" with mongoose so populate('owner') works standalone; swap for Member 1's real User model on merge
+const Skill = require('../models/skill.model'); 
+require('../models/user.model'); 
 const ApiError = require('../utils/ApiError');
 const ApiFeatures = require('../utils/apiFeatures');
 
@@ -22,7 +22,7 @@ async function assertSkillsExist(skillIds) {
 // Rule: only the project owner OR an Admin can update/delete a project.
 function assertIsOwnerOrAdmin(project, user) {
   const isOwner = project.owner.toString() === user.id;
-  const isAdmin = user.role === 'admin';
+  const isAdmin = user.role === 'Admin';
   if (!isOwner && !isAdmin) {
     throw new ApiError(403, 'Only the project owner or an admin can do this');
   }

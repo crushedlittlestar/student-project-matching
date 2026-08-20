@@ -1,5 +1,34 @@
-# student-project-matching
+# Student Project & Team Matching System
 
+A backend platform for university students to create projects, find teammates
+based on required skills, and manage teams — built with Node.js, Express, and MongoDB.
+
+## Tech Stack
+Node.js, Express.js, MongoDB, Mongoose, JWT, bcrypt, Winston/morgan, Jest, Docker, Swagger
+
+## Setup
+1. Clone the repo: `git clone <repo-url>`
+2. Install dependencies: `npm install`
+3. Copy `.env.example` to `.env` and fill in real values
+4. Run: `npm run dev`
+5. API docs available at `http://localhost:5000/api-docs`
+
+## Environment Variables
+See `.env.example` for required variables (PORT, MONGO_URI, JWT_SECRET)
+
+## Running Tests
+`npm test`
+
+## Running with Docker
+`docker compose up --build`
+
+## Modules
+- Authentication & Users — Jana
+- Projects — Hagar
+- Applications — Taky
+- Team & File Upload — Kawser
+- Skills, Search & Matching — Mohamed
+- Admin, Logging & Reports — Lina
 
 # Member 3 — Project Management Module
 

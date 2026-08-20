@@ -55,7 +55,7 @@ const router = express.Router();
  *       401: { description: Not authenticated }
  */
 router.get('/', controller.listProjects);
-router.post('/', authenticate, authorize('student'), controller.createProject);
+router.post('/', authenticate, authorize('Student'), controller.createProject);
 
 /**
  * @swagger
