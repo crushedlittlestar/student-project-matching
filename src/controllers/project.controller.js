@@ -9,7 +9,7 @@ const service = require('../services/project.service');
 // POST /api/projects
 const createProject = catchAsync(async (req, res) => {
   validateCreateProject(req.body);
-  const project = await service.createProject(req.user.id, req.body);
+  const project = await service.createProject(req.user.userId, req.body);
   res.status(201).json({ success: true, data: project });
 });
 

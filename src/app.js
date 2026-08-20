@@ -23,6 +23,7 @@ app.use('/api/users', userRouter);
 app.use('/api/projects', projectRoutes);
 app.use('/api/categories', categoryRoutes);
 app.use('/api/reports', reportRouter);
+app.use("/api", require("./routes"));
 app.use('/api/admin', adminRoutes);
 app.use('/api/skills', skillRoutes);
 
