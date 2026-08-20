@@ -1,11 +1,13 @@
 const express = require('express');
-const { authenticate, authorize } = require('../../middleware/auth.middleware');
+const  authenticate  = require('../middlewares/auth.middleware');
+const   authorize  = require('../middlewares/role.middleware');
+
 const {
   listCategories,
   createCategory,
   updateCategory,
   deleteCategory,
-} = require('./category.controller');
+} = require('../controllers/category.controller');
 
 const router = express.Router();
 
@@ -22,14 +24,14 @@ router.get('/', listCategories);
 
 // @route  POST /api/categories
 // @access Admin
-router.post('/', authenticate, authorize('admin'), createCategory);
+router.post('/', authenticate, authorize('Admin'), createCategory);
 
 // @route  PATCH /api/categories/:id
 // @access Admin
-router.patch('/:id', authenticate, authorize('admin'), updateCategory);
+router.patch('/:id', authenticate, authorize('Admin'), updateCategory);
 
 // @route  DELETE /api/categories/:id
 // @access Admin
-router.delete('/:id', authenticate, authorize('admin'), deleteCategory);
+router.delete('/:id', authenticate, authorize('Admin'), deleteCategory);
 
 module.exports = router;

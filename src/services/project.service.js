@@ -1,9 +1,9 @@
-const Project = require('./project.model');
-const Category = require('../categories/category.model');
-const Skill = require('./skill.model.stub'); // swap for Member 2's real Skill model on merge
-require('./user.model.stub'); // registers "User" with mongoose so populate('owner') works standalone; swap for Member 1's real User model on merge
-const ApiError = require('../../utils/ApiError');
-const ApiFeatures = require('../../utils/apiFeatures');
+const Project = require('../models/project.model');
+const Category = require('../models/category.model');
+const Skill = require('../models/skill.model.stub'); // swap for Member 2's real Skill model on merge
+require('../models/user.model'); // registers "User" with mongoose so populate('owner') works standalone; swap for Member 1's real User model on merge
+const ApiError = require('../utils/ApiError');
+const ApiFeatures = require('../utils/apiFeatures');
 
 async function assertCategoryExists(categoryId) {
   const category = await Category.findById(categoryId);

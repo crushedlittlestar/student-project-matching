@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
-const ApiError = require('../../utils/ApiError');
-const Project = require('./project.model');
+const ApiError = require('../utils/ApiError');
+const Project = require('../models/project.model');
 
 const isObjectId = (v) => mongoose.Types.ObjectId.isValid(v);
 

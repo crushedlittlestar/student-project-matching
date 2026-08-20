@@ -101,4 +101,6 @@ projectSchema.statics.canTransition = function canTransition(from, to) {
   return TRANSITIONS[from]?.includes(to) ?? false;
 };
 
-module.exports = mongoose.model('Project', projectSchema);
+module.exports =
+    mongoose.models.Project ||
+    mongoose.model("Project", projectSchema);

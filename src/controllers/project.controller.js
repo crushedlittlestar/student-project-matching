@@ -1,10 +1,10 @@
-const catchAsync = require('../../utils/catchAsync');
+const catchAsync = require('../utils/catchAsync');
 const {
   validateCreateProject,
   validateUpdateProject,
   validateChangeStatus,
-} = require('./project.validation');
-const service = require('./project.service');
+} = require('../validations/project.validation');
+const service = require('../services/project.service');
 
 // POST /api/projects
 const createProject = catchAsync(async (req, res) => {

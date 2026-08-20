@@ -1,10 +1,10 @@
-const Category = require('./category.model');
-const ApiError = require('../../utils/ApiError');
-const catchAsync = require('../../utils/catchAsync');
+const Category = require('../models/category.model');
+const ApiError = require('../utils/ApiError');
+const catchAsync = require('../utils/catchAsync');
 const {
   validateCreateCategory,
   validateUpdateCategory,
-} = require('./category.validation');
+} = require('../validations/category.validation');
 
 // GET /api/categories  (public — students need this to filter/browse projects)
 const listCategories = catchAsync(async (req, res) => {
@@ -42,7 +42,7 @@ const updateCategory = catchAsync(async (req, res) => {
 // Soft-guard: refuse to delete a category that's still in use so existing
 // projects don't end up pointing at a dangling reference.
 const deleteCategory = catchAsync(async (req, res) => {
-  const Project = require('../projects/project.model'); // lazy require avoids circular import at module load
+  const Project = require('../models/project.model'); // lazy require avoids circular import at module load
   const inUse = await Project.exists({ category: req.params.id });
   if (inUse) {
     throw new ApiError(

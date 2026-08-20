@@ -3,9 +3,32 @@ const swaggerUi = require("swagger-ui-express");
 
 const swaggerSpec = require("./config/swagger");
 
-const app = express();
+const ApiError = require('./utils/ApiError');
 
+const projectRoutes = require('./routes/project.routes');
+const categoryRoutes = require('./routes/category.routes');
+const reportRouter = require('./routes/report.routes');
+const authRouter = require('./routes/auth.routes');
+const userRouter = require('./routes/user.routes');
+const errorHandler = require('./middlewares/error.middleware');
+
+const app = express();
 app.use(express.json());
+
+app.use('/api/auth', authRouter);
+app.use('/api/users', userRouter);
+
+
+app.use('/api/projects', projectRoutes);
+app.use('/api/categories', categoryRoutes);
+app.use('/api/reports', reportRouter);
+
+// 404 handler
+app.use((req, res, next) => {
+  next(new ApiError(404, `Route not found: ${req.method} ${req.originalUrl}`));
+});
+
+app.use(errorHandler);
 
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
