@@ -22,7 +22,7 @@ async function assertSkillsExist(skillIds) {
 // Rule: only the project owner OR an Admin can update/delete a project.
 function assertIsOwnerOrAdmin(project, user) {
   const isOwner = project.owner.toString() === user.id;
-  const isAdmin = user.role === 'admin';
+  const isAdmin = user.role === 'Admin';
   if (!isOwner && !isAdmin) {
     throw new ApiError(403, 'Only the project owner or an admin can do this');
   }

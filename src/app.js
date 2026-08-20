@@ -27,17 +27,12 @@ app.use("/api", require("./routes"));
 app.use('/api/admin', adminRoutes);
 app.use('/api/skills', skillRoutes);
 
-app.use("/api", require("./routes"));
-
-app.use(require("./middlewares/error.middleware"));
-
-
 // 404 handler
 app.use((req, res, next) => {
   next(new ApiError(404, `Route not found: ${req.method} ${req.originalUrl}`));
 });
 
+// Central error handler
 app.use(errorHandler);
-
 
 module.exports = app;

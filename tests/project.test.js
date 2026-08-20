@@ -17,9 +17,9 @@ const ADMIN_ID = new mongoose.Types.ObjectId().toString();
 const tokenFor = (id, role) =>
   jwt.sign({ id, role }, process.env.JWT_SECRET || 'dev-secret');
 
-const ownerAuth = () => `Bearer ${tokenFor(OWNER_ID, 'student')}`;
-const otherAuth = () => `Bearer ${tokenFor(OTHER_STUDENT_ID, 'student')}`;
-const adminAuth = () => `Bearer ${tokenFor(ADMIN_ID, 'admin')}`;
+const ownerAuth = () => `Bearer ${tokenFor(OWNER_ID, 'Student')}`;
+const otherAuth = () => `Bearer ${tokenFor(OTHER_STUDENT_ID, 'Student')}`;
+const adminAuth = () => `Bearer ${tokenFor(ADMIN_ID, 'Admin')}`;
 
 let category;
 let skills;

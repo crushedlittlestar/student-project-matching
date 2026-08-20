@@ -1,5 +1,5 @@
 const Application = require("../models/application.model");
-const Project = require("../models/Project.model");
+const Project = require("../models/project.model");
 const ApiError = require("../utils/ApiError");
 const {
   syncMembershipCount,
