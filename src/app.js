@@ -22,7 +22,7 @@ app.use('/api/users', userRouter);
 app.use('/api/projects', projectRoutes);
 app.use('/api/categories', categoryRoutes);
 app.use('/api/reports', reportRouter);
-
+app.use("/api", require("./routes"));
 // 404 handler
 app.use((req, res, next) => {
   next(new ApiError(404, `Route not found: ${req.method} ${req.originalUrl}`));
@@ -30,10 +30,5 @@ app.use((req, res, next) => {
 
 app.use(errorHandler);
 
-app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
-
-app.use("/api", require("./routes"));
-
-app.use(require("./middlewares/error.middleware"));
 
 module.exports = app;
