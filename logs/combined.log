@@ -43,3 +43,6 @@
 [2026-08-19T12:34:13.758Z] INFO: ::ffff:127.0.0.1 - - [19/Aug/2026:12:34:13 +0000] "POST /api/reports HTTP/1.1" 400 60 "-" "-"
 [2026-08-19T12:34:13.763Z] INFO: ::ffff:127.0.0.1 - - [19/Aug/2026:12:34:13 +0000] "PATCH /api/reports/6a85a2c5d00517770b5201c1/resolve HTTP/1.1" 403 27 "-" "-"
 [2026-08-19T12:34:13.875Z] INFO: ::ffff:127.0.0.1 - - [19/Aug/2026:12:34:13 +0000] "PATCH /api/reports/6a85a2c5d00517770b5201c1/resolve HTTP/1.1" 200 386 "-" "-"
+[2026-08-20T14:31:05.218Z] INFO: Admin action: user 6a870eb4b84c34cae61b81ea updated user 6a85866852925755d6278da6 at 2026-08-20T14:31:05.218Z
+[2026-08-20T14:32:42.523Z] INFO: Admin action: user 6a870eb4b84c34cae61b81ea deleted project 6a86a60e07be2e1a94b4c921 at 2026-08-20T14:32:42.523Z
+[2026-08-20T14:37:11.891Z] INFO: Admin action: user 6a871117c7b3a42f6532dcb7 deleted project 6a871117c7b3a42f6532dcba at 2026-08-20T14:37:11.891Z

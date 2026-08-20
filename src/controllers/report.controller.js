@@ -1,5 +1,5 @@
 const Report = require('../models/Report.model');
-const Project = require('../models/Project.model');
+const Project = require('../models/project.model');
 const { AppError, sendSuccess, sendError } = require('../utils');
 
 // CREATE a report — any logged-in user can report a Project or a User.
