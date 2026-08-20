@@ -46,7 +46,7 @@ const router = express.Router();
  *         description: Email already exists
  */
 router.post(
-    "/auth/register",
+    "/register",
     validate(registerSchema),
     register
 );
@@ -87,7 +87,7 @@ router.post(
  *         description: Account is blocked
  */
 router.post(
-    "/auth/login",
+    "/login",
     validate(loginSchema),
     login
 );

@@ -1,4 +1,4 @@
-const ApiError = require('../../utils/ApiError');
+const ApiError = require('../utils/ApiError');
 
 function validateCreateCategory(body) {
   const errors = [];

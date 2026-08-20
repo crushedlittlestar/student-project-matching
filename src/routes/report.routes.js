@@ -3,6 +3,7 @@ const router = require('express').Router();
 const authenticate = require('../middlewares/auth.middleware');
 const authorize = require('../middlewares/role.middleware');
 const validateReport = require('../middlewares/report.middleware');
+
 const {
   createReport,
   getReports,
@@ -11,14 +12,14 @@ const {
 
 // POST /api/reports any logged-in user
 router.post(
-  '/reports',
+  '/',
   authenticate,
   validateReport,
   createReport
 );
 // GET /api/reports admin only
 router.get(
-  '/reports',
+  '/',
   authenticate,
   authorize('Admin'),
   getReports
@@ -26,7 +27,7 @@ router.get(
 
 // PATCH /api/reports/:id/resolve admin only.
 router.patch(
-  '/reports/:id/resolve',
+  '/:id/resolve',
   authenticate,
   authorize('Admin'),
   resolveReport

@@ -4,10 +4,10 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
-const app = require('../app');
-const User = require('../models/user.model');
-const Project = require('../models/Project.model');
-const Report = require('../models/Report.model');
+const app = require('../src/app');
+const User = require('../src/models/user.model');
+const Project = require('../src/models/project.model');
+const Report = require('../src/models/Report.model');
 
 let ownerToken, studentToken, adminToken;
 let ownedProjectId, someProjectId, someReportId;
@@ -21,7 +21,9 @@ function signToken(user) {
 }
 
 beforeAll(async () => {
-  await mongoose.connect(process.env.MONGO_URI);
+  if (mongoose.connection.readyState === 0) {
+    await mongoose.connect(process.env.MONGO_URI);
+  }
 
   const hashedPassword = await bcrypt.hash('TestPass123', 10);
 
@@ -50,17 +52,29 @@ beforeAll(async () => {
   studentToken = signToken(student);
   adminToken = signToken(admin);
 
+  // Generate valid ObjectIds for referenced fields
+  const mockCategoryId = new mongoose.Types.ObjectId();
+  const mockSkillId = new mongoose.Types.ObjectId();
+
   const ownedProject = await Project.create({
     title: 'Owned Test Project',
     owner: owner._id,
-    status: 'OPEN'
+    status: 'OPEN',
+    description: 'A valid project description long enough to pass validation',
+    category: mockCategoryId,
+    maxMembers: 5,
+    requiredSkills: [mockSkillId]
   });
   ownedProjectId = ownedProject._id.toString();
 
   const otherProject = await Project.create({
     title: 'Other Test Project',
     owner: admin._id,
-    status: 'OPEN'
+    status: 'OPEN',
+    description: 'Another valid project description long enough to pass validation',
+    category: mockCategoryId,
+    maxMembers: 3,
+    requiredSkills: [mockSkillId]
   });
   someProjectId = otherProject._id.toString();
 
@@ -74,10 +88,12 @@ beforeAll(async () => {
 });
 
 afterAll(async () => {
-  await User.deleteMany({ email: /@test\.com$/ });
-  await Project.deleteMany({ title: /Test Project$/ });
-  await Report.deleteMany({ reason: /report/i });
-  await mongoose.connection.close();
+  if (mongoose.connection.readyState !== 0) {
+    await User.deleteMany({ email: /@test\.com$/ });
+    await Project.deleteMany({ title: /Test Project$/ });
+    await Report.deleteMany({ reason: /report/i });
+    await mongoose.connection.close();
+  }
 });
 
 describe('Report module', () => {

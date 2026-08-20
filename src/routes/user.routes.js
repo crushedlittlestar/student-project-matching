@@ -23,7 +23,7 @@ const router = express.Router();
  *       404:
  *         description: User not found
  */
-router.get("/users/me", authenticate, getMe);
+router.get("/me", authenticate, getMe);
 
 /**
  * @swagger
@@ -65,7 +65,7 @@ router.get("/users/me", authenticate, getMe);
  *         description: Email already exists
  */
 router.patch(
-    "/users/me",
+    "/me",
     authenticate,
     validate(updateProfileSchema),
     updateMe

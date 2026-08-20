@@ -4,9 +4,9 @@ const jwt = require('jsonwebtoken');
 const { MongoMemoryServer } = require('mongodb-memory-server');
 
 const app = require('../src/app');
-const Category = require('../src/modules/categories/category.model');
-const Skill = require('../src/modules/projects/skill.model.stub');
-const Project = require('../src/modules/projects/project.model');
+const Category = require('../src/models/category.model');
+const Skill = require('../src/models/skill.model.stub');
+const Project = require('../src/models/project.model');
 
 let mongoServer;
 
@@ -25,13 +25,18 @@ let category;
 let skills;
 
 beforeAll(async () => {
+  if (mongoose.connection.readyState !== 0) {
+    await mongoose.disconnect();
+  }
   mongoServer = await MongoMemoryServer.create();
   await mongoose.connect(mongoServer.getUri());
-});
+}, 300000);
 
 afterAll(async () => {
   await mongoose.disconnect();
-  await mongoServer.stop();
+    if (mongoServer) {
+    await mongoServer.stop();
+  }
 });
 
 beforeEach(async () => {
@@ -275,7 +280,7 @@ describe('syncMembershipCount integration point (used by Applications/Teams modu
       maxMembers: 2,
     });
 
-    const service = require('../src/modules/projects/project.service');
+    const service = require('../src/services/project.service');
     const updated = await service.syncMembershipCount(project._id, +1);
     expect(updated.currentMembersCount).toBe(2);
   });
@@ -291,7 +296,7 @@ describe('syncMembershipCount integration point (used by Applications/Teams modu
       currentMembersCount: 2,
     });
 
-    const service = require('../src/modules/projects/project.service');
+    const service = require('../src/services/project.service');
     const updated = await service.syncMembershipCount(project._id, -1);
     expect(updated.currentMembersCount).toBe(1);
   });
