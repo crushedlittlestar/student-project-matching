@@ -3,7 +3,7 @@ const Project = require('../models/project.model');
 const reportService = require('../services/report.service');
 const { AppError, sendSuccess, sendError } = require('../utils');
 
-// CREATE a report — any logged-in user can report a Project or a User.
+// CREATE a report : any logged-in user can report a Project or a User.
 const createReport = async (req, res, next) => {
   try {
     const { targetType, targetId, reason } = req.body;
@@ -38,7 +38,7 @@ const createReport = async (req, res, next) => {
   }
 };
 
-// GET reports — admin only (enforced by route middleware).
+// GET reports : admin only
 const getReports = async (req, res, next) => {
   try {
     const { status = 'Pending' } = req.query;
@@ -72,10 +72,9 @@ const resolveReport = async (req, res, next) => {
     if (action === 'takeAction' && report.targetType === 'Project') {
       await Project.findByIdAndDelete(report.targetId);
     }
-
     report.status = action === 'dismiss' ? 'Dismissed' : 'Reviewed';
     report.resolvedBy = req.user.userId;
-    await report.save();
+    await report.save(); //save resolved status in DB
 
     return sendSuccess(res, report, 'Report resolved successfully', 200);
 
