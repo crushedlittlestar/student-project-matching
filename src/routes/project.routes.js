@@ -1,0 +1,11 @@
+const router = require("express").Router();
+const authentication = require("../middlewares/auth.middleware") ;
+const {createProject , getProjects , getProjectById , updateProject ,deleteProject , getRecommendedProjects} = require("../controllers/project.controller");
+router.use(authentication);
+router.post("/projects" ,  createProject);
+router.get("/projects" , getProjects);
+router.get("/projects/recommended" , getRecommendedProjects);
+router.get("/projects/:id" , getProjectById);
+router.patch("/projects/:id" , updateProject);
+router.delete("/projects/:id" , deleteProject);
+module.exports = router ;
