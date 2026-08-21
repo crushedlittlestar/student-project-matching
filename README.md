@@ -110,6 +110,41 @@ Why:
 | PATCH | `/api/projects/:id/status` | Owner or Admin — body `{ status }`, enforces OPEN → IN_PROGRESS → COMPLETED |
 | GET | `/api/categories` | Public |
 | POST/PATCH/DELETE | `/api/categories(/:id)` | Admin |
+# Member 4 - Applications Module
+
+## Overview
+
+The Applications Module is responsible for managing student applications to projects.
+
+Students can apply to projects, view their applications, and withdraw them. Project owners can view applications submitted to their projects and accept or reject them.
+
+## Features
+
+- Create a project application
+- View the authenticated student's applications
+- View applications submitted to a project
+- Accept an application
+- Reject an application
+- Withdraw an application
+- JWT authentication
+- Input validation
+- Error handling
+- Application status management
+- MongoDB persistence using Mongoose
+
+## Application Status
+
+Applications use the following statuses:
+
+- `PENDING`
+- `ACCEPTED`
+- `REJECTED`
+
+The normal application flow is:
+
+```text
+PENDING → ACCEPTED
+PENDING → REJECTED
 
 ## What's intentionally left out for MVP
 - `ProjectFile` uploads — deferred per the scope note (first thing to cut if
