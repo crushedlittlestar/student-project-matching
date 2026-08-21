@@ -248,6 +248,93 @@ This module is responsible for:
 
 Project management, applications, teams, authentication, and other system functionality are handled by the other project modules.
 
+# Member 2 — Skills, Search & Student Profiles Module
+
+Scope: Skill model + CRUD, student skill management, student search/filter/pagination, profile viewing, and profile picture upload.
+
+This is a backend-only module built with Express and Mongoose and designed to integrate with the shared authentication and user modules.
+
+## Backend-only module
+
+This module handles skill management and student profile functionality. Students can manage the skills attached to their profiles, search for other students based on skills, view student profiles, and upload profile pictures.
+
+Admins manage the available skills, while authenticated users can use the student and profile features.
+
+## Integration contracts (read before merging)
+
+* Authentication middleware — all endpoints in this module require authentication. The authentication middleware must provide the authenticated user's ID and role through req.user.
+* Role middleware — skill creation, updating, and deletion require the Admin role.
+* User model — the Profile model references the shared User model. Student search and profile endpoints populate the user's name.
+* Skill model — student profiles store references to skills instead of duplicating skill information.
+* Profile model — each user can have one profile. A profile is automatically created when needed if one does not already exist.
+
+## Business rules enforced
+
+* Only Admin users can create, update, or delete skills.
+* Authenticated users can retrieve the list of active skills.
+* Skill names are required and cannot contain only whitespace.
+* Duplicate skill names are rejected when creating a skill.
+* Students can only add skills that already exist.
+* A student cannot add the same skill to their profile more than once.
+* Invalid skill IDs are rejected.
+* Student profiles are automatically created when required.
+* Student search can filter by one skill or multiple comma-separated skills.
+* Skill-name search is case-insensitive.
+* Student search supports pagination with a default limit of 10 and a maximum limit of 50.
+* Student profile responses include the student's name and populated skills.
+* Profile pictures are limited to .jpg, .jpeg, .png, and .webp.
+* Profile picture uploads have a maximum size of 2 MB.
+* Uploaded profile pictures are given unique filenames based on the user ID and upload timestamp.
+
+## Student search
+
+Students can be searched using either a single skill or multiple skills.
+
+The search endpoint supports:
+
+* skill — filter by one skill name.
+* skills — filter by multiple comma-separated skill names.
+* page — page number, defaults to 1.
+* limit — results per page, defaults to 10 and is limited to a maximum of 50.
+
+Search results include pagination information such as the total number of matching students, current page, and total pages.
+
+## Profile picture upload
+
+Authenticated users can upload or update their profile picture.
+
+Images are stored in the profile-picture uploads directory and the resulting file path is saved in the student's profile.
+
+Only supported image extensions are accepted, and uploads larger than 2 MB are rejected.
+
+## Endpoints
+
+| Method | Route                           | Access                                                      |
+| ------ | ------------------------------- | ----------------------------------------------------------- |
+| GET    | /api/skills                   | Authenticated                                               |
+| POST   | /api/skills                   | Admin                                                       |
+| PATCH  | /api/skills/:id               | Admin                                                       |
+| DELETE | /api/skills/:id               | Admin                                            | GET    | /api/users/me/skills          | Authenticated                                               |
+| POST   | /api/users/me/skills          | Authenticated                                               |
+| DELETE | /api/users/me/skills/:skillId | Authenticated                                               |
+| GET    | /api/students                 | Authenticated — filters: skill, skills, page, limit |
+| GET    | /api/students/:id             | Authenticated                                               |
+| PATCH  | /api/users/me/profile-picture | Authenticated — multipart field: picture                  |
+
+## Module responsibilities
+
+This module is responsible for:
+
+* Skill management
+* Student skill management
+* Student profile data
+* Student search by skills
+* Search pagination
+* Student profile retrieval
+* Profile picture uploads
+
+Project management, applications, teams, authentication, and other system functionality are handled by the other project modules.
+
 # Member 3 — Project Management Module
 
 Scope: `Project` model + CRUD, `Category` model + CRUD, search/filter/pagination.
