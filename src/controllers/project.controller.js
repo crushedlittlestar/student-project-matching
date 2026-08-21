@@ -1,182 +1,58 @@
+const catchAsync = require('../utils/catchAsync');
+const {
+  validateCreateProject,
+  validateUpdateProject,
+  validateChangeStatus,
+} = require('../validations/project.validation');
+const service = require('../services/project.service');
 
-const Project = require ("../models/project.model") ;
-const Skill = require("../models/skill.model");
-const Profile = require("../models/profile.model") ;
-async function createProject(req , res , next )
-{
-    try
-    {
-        const { title , description , requiredSkills } = req.body ;
-        const project = await Project.create(
-            {
-                title ,
-                description ,
-                requiredSkills ,
-                owner : req.user.userId
-            }
-        );
-        res.status(201).json(
-            {
-                message : "project created successfully" , project
-            }
-        )
-    }
-    catch(err)
-    {
-        next(err);
-    }
-};
-async function getProjects(req , res , next )
-{
-    try
-    {
-        const {skill , page = 1 , limit = 10 } = req.query ;
-        const filter = {};
-        if(skill)
-        {
-            const matchedSkill = await Skill.findOne(   //skill document
-                {
-                    name : new RegExp("^" + skill + "$"  , i)
-                }
-            );
-            if(!matchedSkill)
-            {
-                return res.json(
-                    {
-                        total : 0 ,
-                        page : Number(page) ,
-                        totalPages : 0 ,
-                        projects : []
-                    }
-                );
-            };
-            filter.requiredSkills = matchedSkill._id ; // add property to filter
-        };
-        const pageNum = Math.max(parseInt(page) || 1 , 1 );
-        const limitNum = Math.min(Math.max(parseInt(limit , 10) || 10 ,1) , 50 );
-        const skip = (pageNum-1) * limitNum ;
-        const [projects , total ] = await Promise.all([
-         Project.find(filter).populate("owner" , "name").populate("requiredSkills").skip(skip).limit(limitNum) ,
-         Project.countDocuments(filter) 
+// POST /api/projects
+const createProject = catchAsync(async (req, res) => {
+  validateCreateProject(req.body);
+  const project = await service.createProject(req.user.id, req.body);
+  res.status(201).json({ success: true, data: project });
+});
 
-        ]);
+// GET /api/projects
+const listProjects = catchAsync(async (req, res) => {
+  const { data, meta } = await service.listProjects(req.query);
+  res.status(200).json({ success: true, data, meta });
+});
 
-        res.json(
-            {
-              total,
-              page : pageNum ,
-              totalPages : Math.ceil(total / limitNum) ,
-              projects
-            }
-        ) ;
-    }
-    catch(err)
-    {
-        next(err);
-    }
-};
-async function getRecommendedProjects(req , res , next)
-{
-    try
-    {
-        const profile = await Profile.findOne(
-            {
-                user : req.user.userId ,
-            }
-        );
-        if(!profile)
-        {
-            return res.status(404).json({message : "profile is not found "});
-        };
-        const studentSkillIds = profile.skills.map((skillID) =>skillID.toString());
-        const projects = await Project.find().populate("owner" , "name").populate("requiredSkills");
-        const recommendedProjects = projects.map((project)=>
-        {
-            const requiredSkillIds = project.requiredSkills.map((skill)=> skill._id.toString());
-            const matchedSkills = requiredSkillIds.filter((skillId)=>studentSkillIds.includes(skillId));
-            const matchScore = requiredSkillIds.length === 0 ? 0 : (matchedSkills.length / requiredSkillIds.length) * 100;
-            return {
-                ...project.toObject() ,
-                matchScore :
-                Number(matchScore.toFixed(2))
-            };
-        });
-        recommendedProjects.sort((a,b)=>b.matchScore - a.matchScore ) ;
-        res.json({projects : "recommended projects"}) ;
-    }
-    catch(err)
-    {
-        next (err) ;
-    }
+// GET /api/projects/:id
+const getProject = catchAsync(async (req, res) => {
+  const project = await service.getProjectById(req.params.id);
+  res.status(200).json({ success: true, data: project });
+});
 
-}
-async function getProjectById(req , res , next ) 
-{
-    try
-    {
-        const project = await Project.findById(req.params.id) .populate("owner" , "name").populate("requiredSkills");
-        if(!project)
-        {
-            res.status(404).json({message :"project not found"}) ;
-        }
-        res.json({project});
-    }
-    catch(err)
-    {
-        next(err) ;
-    }
-    
-}
-async function updateProject(req , res , next)
-{
-    try
-    {
-        const {title , description , requiredSkills  , status} = req.body ;
-        const project = await Project.findByIdAndUpdate( req.params.id ,
-            {
-                title ,
-                description ,
-                requiredSkills ,
-                status
-            },
-            {
-                new : true ,
-                runValidators : true 
-            }
-        ). populate("owner" , "name") .populate("requiredSkills");
-        if(!project)
-        {
-            return res.status(404).json({message : "project not found " }) ;
-        }
-        res.json({message : "project update successfully "})
-    }
-    catch(err)
-    {
-        next(err);
-    }
+// PATCH /api/projects/:id
+// status is not editable here — use PATCH /api/projects/:id/status instead.
+const updateProject = catchAsync(async (req, res) => {
+  validateUpdateProject(req.body);
+  const project = await service.updateProject(req.params.id, req.user, req.body);
+  res.status(200).json({ success: true, data: project });
+});
+
+// PATCH /api/projects/:id/status
+// Body: { status: 'IN_PROGRESS' | 'COMPLETED' }
+// Enforces OPEN -> IN_PROGRESS -> COMPLETED, no skipping.
+const changeStatus = catchAsync(async (req, res) => {
+  validateChangeStatus(req.body);
+  const project = await service.changeStatus(req.params.id, req.user, req.body.status);
+  res.status(200).json({ success: true, data: project });
+});
+
+// DELETE /api/projects/:id
+const deleteProject = catchAsync(async (req, res) => {
+  await service.deleteProject(req.params.id, req.user);
+  res.status(204).send();
+});
+
+module.exports = {
+  createProject,
+  listProjects,
+  getProject,
+  updateProject,
+  changeStatus,
+  deleteProject,
 };
-async function deleteProject (req , res , next)
-{
-    try
-    {
-        const project = await Project.findAndDelete(req.params.id) ;
-        if(!project)
-        {
-            res.status(404).json({message : "project not found "}) ;
-        };
-        res.json({message : "project deleted successfully"});
-    }
-    catch(err)
-    {
-        next(err)
-    }
-};
-module.exports = 
-{
-    createProject ,
-    getProjects ,
-    getProjectById ,
-    updateProject ,
-    deleteProject ,
-    getRecommendedProjects ,
-}
