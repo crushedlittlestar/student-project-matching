@@ -67,9 +67,10 @@ router.get('/users', getAllUsers);
  *                 type: string
  *                 enum: [Student, Admin]
  *                 example: Admin
- *               isBlocked:
- *                 type: boolean
- *                 example: true
+ *               accountStatus:
+ *                 type: string
+ *                 enum: ["Active", "Blocked"]
+ *                 example: Active
  *     responses:
  *       200:
  *         description: User updated successfully

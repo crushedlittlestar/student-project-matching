@@ -21,11 +21,11 @@ exports.getAllUsers = async (req, res, next) => {
 exports.updateUserRole = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const { role, isBlocked } = req.body;
+    const { role, accountStatus } = req.body;
 
     const user = await User.findByIdAndUpdate(
       id,
-      { ...(role && { role }), ...(isBlocked !== undefined && { isBlocked }) },
+      { ...(role && { role }), ...(accountStatus !== undefined && { accountStatus }) },
       { new: true, runValidators: true }
     ).select('-password');
 
