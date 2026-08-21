@@ -40,10 +40,6 @@ const applicationSchema = new mongoose.Schema(
   }
 );
 
-/*
- * Prevent the same student from applying
- * to the same project more than once.
- */
 applicationSchema.index(
   {
     project: 1,
