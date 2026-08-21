@@ -12,6 +12,7 @@ const userRouter = require('./routes/user.routes');
 const errorHandler = require('./middlewares/error.middleware');
 const adminRoutes = require('./routes/admin.routes');
 const skillRoutes = require('./routes/skills.routes');
+const studentRoutes = require('./routes/students.routes');
 
 const app = express();
 app.use(express.json());
@@ -23,9 +24,11 @@ app.use('/api/users', userRouter);
 app.use('/api/projects', projectRoutes);
 app.use('/api/categories', categoryRoutes);
 app.use('/api/reports', reportRouter);
-app.use("/api", require("./routes"));
+
 app.use('/api/admin', adminRoutes);
-app.use('/api/skills', skillRoutes);
+app.use('/api', skillRoutes);
+app.use('/api', studentRoutes);
+
 
 // 404 handler
 app.use((req, res, next) => {
