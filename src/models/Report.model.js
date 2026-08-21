@@ -3,16 +3,12 @@ const mongoose = require('mongoose');
 const reportSchema = new mongoose.Schema({
 
   reporter: {
-    // We don't store the reporter's actual data here — just a REFERENCE
-    // (their MongoDB _id) to a document in the 'User' collection.
-    // This is how relationships work in Mongoose: instead of copying data,
-    // you store an id and "populate" it later when you need the full details.
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'User', // tells Mongoose WHICH collection this id points to
+    ref: 'User', 
     required: true
   },
 
-     // A report can point at either a Project or a User. We store which
+    // A report can point at either a Project or a User. We store which
     // TYPE is being reported here, and the actual id below.
  targetType: {
     type: String,
@@ -35,7 +31,7 @@ const reportSchema = new mongoose.Schema({
 
   status: {
     // A report's lifecycle: it starts Pending, and an admin later moves it
-    // to Reviewed (action was taken) or Dismissed (nothing wrong found).
+    // to Reviewed (action was taken) or Dismissed (nothing wrong found)
     type: String,
     enum: ['Pending', 'Reviewed', 'Dismissed'],
     default: 'Pending'
@@ -51,7 +47,6 @@ const reportSchema = new mongoose.Schema({
 }, 
 {
   timestamps: true
-  // this automatically adds createdAt and updatedAt fields to every document
 });
 
 // BUSINESS RULE enforced at the DATABASE level
